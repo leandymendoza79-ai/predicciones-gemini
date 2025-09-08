@@ -1,0 +1,30 @@
+name: Predicciones Diarias
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 7:00 a.m. hora Perú (GMT-5)
+    - cron: '0 12 * * *'  # GitHub Actions usa UTC, 7 a.m. Lima = 12 UTC
+  workflow_dispatch:  # Permite ejecutar manualmente también
+
+jobs:
+  run-predictions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run predictions script
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python predicciones_gemini.py
