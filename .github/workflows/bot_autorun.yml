@@ -1,10 +1,10 @@
-name: Bot Predicciones Automático
+name: Bot Predicciones Horarias
 
+# Ejecuta cada hora (GitHub Actions usa UTC, 7 a.m. Lima = 12 UTC)
 on:
   schedule:
-    # Cada hora a minuto 0 UTC → 7 a.m., 8 a.m., etc., hora Lima
-    - cron: '0 * * * *'
-  workflow_dispatch: # Permite ejecutar manualmente
+    - cron: '0 * * * *'  # cada hora en punto
+  workflow_dispatch:   # permite ejecutar manualmente
 
 jobs:
   run-bot:
@@ -14,17 +14,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Configurar Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: Instalar dependencias
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Ejecutar bot optimizado
+      - name: Run bot
         env:
           API_KEY: ${{ secrets.API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python bot_autorun_opt.py
+        run: python predicciones_gemini.py
